@@ -20,7 +20,7 @@ class ShaderProgram
 		void deleteProgram();
 		string ToString();
 		void useProgram();
-		void setMatrix4f(char* uniform,glm::mat4 matrix);
+		void setMatrix4f(string uniform,glm::mat4 matrix);
 };
 
 //Functions for loading shaders sources

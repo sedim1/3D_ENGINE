@@ -58,6 +58,13 @@ string ShaderProgram::ToString()
 	return "ID: " + to_string(id);
 }
 
+//Uniform update methods
+void ShaderProgram::setMatrix4f(string uniform,glm::mat4 matrix){
+	useProgram();
+	int location = glGetUniformLocation(id,uniform.data());
+		glUniformMatrix4fv(location,1,GL_FALSE,glm::value_ptr(matrix));
+}
+
 //Functions of compiling and linking shaders
 char* loadShaderFile(char* source)
 {

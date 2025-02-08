@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include<SHADER.h>
+#include<CAMERA.h>
 #include <vector>
 
 //Pasos para crear ventana
@@ -21,6 +22,7 @@ bool GladLoad();
 void Framebuffer_Size_Callback(GLFWwindow* window,int w, int h);//Funcion que se va a llamar cada vez que la ventana cambie de tamano
 void UpdateWindow(GLFWwindow* window,ShaderProgram* shader);
 void GeneraBuffer();
+void debugMode(GLFWwindow* w);
 
 float vertexData[] ={
 	//Posicion       //Color
@@ -90,13 +92,30 @@ bool GladLoad()
 
 void UpdateWindow(GLFWwindow* window,ShaderProgram* shader)
 {
+	Camera camera;
+	camera.position.z = 8.0f;
+	camera.yaw = -90.0f;
+	camera.updatePerspectiveProjection(width,height,0.1f,100.0f);
+	shader->setMatrix4f("projection",camera.projection);
+
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0f,0.0f,0.0f,1.0f); //Color de la ventana
 		glClear(GL_COLOR_BUFFER_BIT);// refrescar el buffer Colorear constantemente
+
+		debugMode(window);
+
 		shader->useProgram();
+
+		//Update Camera
+		camera.spectatorMode(window);
+		camera.updateViewMatrix();
+
+		shader->setMatrix4f("view",camera.view);
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES,sizeof(indices),GL_UNSIGNED_INT,0);
+
 		glfwSwapBuffers(window);// Limpiar el buffer del frame anterior
 		glfwPollEvents();//llamar eventos que nosotros hayamos configurado
 	}
@@ -130,3 +149,12 @@ void GeneraBuffer()
 	glBindVertexArray(0);
 }
 
+void debugMode(GLFWwindow* w)
+{
+	if((glfwGetKey(w,GLFW_KEY_ESCAPE) == GLFW_PRESS))
+		glfwSetWindowShouldClose(w,true);
+	if((glfwGetKey(w,GLFW_KEY_1) == GLFW_PRESS))
+		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	if((glfwGetKey(w,GLFW_KEY_2) == GLFW_PRESS))
+		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+}
