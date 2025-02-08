@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include<iostream>
 #include<stdlib.h>
@@ -20,12 +19,11 @@ class ShaderProgram
 		void deleteProgram();
 		string ToString();
 		void useProgram();
-		void setMatrix4f(string uniform,glm::mat4 matrix);
+		void setMatrix4f(const string &uniform,glm::mat4 matrix);
+		void setInt(const string &uniform,int value);
 };
 
 //Functions for loading shaders sources
 char* loadShaderFile(char* source);
 int compileShader(char* source,GLenum type);
 bool linkPrograms(vector<int>&shaders);
-
-#endif

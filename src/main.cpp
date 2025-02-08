@@ -2,8 +2,9 @@
 #include <GLFW/glfw3.h> //
 #include <iostream>
 #include <string>
-#include<SHADER.h>
-#include<CAMERA.h>
+#include"SHADER.h"
+#include"CAMERA.h"
+#include"MODEL.h"
 #include <vector>
 
 //Pasos para crear ventana
@@ -20,7 +21,7 @@ const unsigned int height = 400;
 void InitGLFWVersion();
 bool GladLoad();
 void Framebuffer_Size_Callback(GLFWwindow* window,int w, int h);//Funcion que se va a llamar cada vez que la ventana cambie de tamano
-void UpdateWindow(GLFWwindow* window,ShaderProgram* shader);
+void UpdateWindow(GLFWwindow* window,ShaderProgram& shader);
 void GeneraBuffer();
 void debugMode(GLFWwindow* w);
 
@@ -56,13 +57,14 @@ int main()
 	if(GladLoad()==false)
 		return -1;
 
-	vector<string>sources = {"SHADERS/vertexShader.glsl","SHADERS/fragmentShader.glsl"};
+	vector<string>sources = {"SHADERS/vertexMecha.glsl","SHADERS/fragmentMecha.glsl"};
 	vector<GLenum>types = {GL_VERTEX_SHADER,GL_FRAGMENT_SHADER};
 	ShaderProgram program(sources,types);
 	cout<<program.ToString()<<endl;
 	glfwSetFramebufferSizeCallback(window,Framebuffer_Size_Callback);
 	GeneraBuffer();
-	UpdateWindow(window,&program);
+	UpdateWindow(window,program);
+	program.deleteProgram();
 	glfwTerminate();
 	return 0;
 }
@@ -90,32 +92,37 @@ bool GladLoad()
 }
 
 
-void UpdateWindow(GLFWwindow* window,ShaderProgram* shader)
+void UpdateWindow(GLFWwindow* window,ShaderProgram& shader)
 {
 	Camera camera;
 	camera.position.z = 8.0f;
 	camera.yaw = -90.0f;
 	camera.updatePerspectiveProjection(width,height,0.1f,100.0f);
-	shader->setMatrix4f("projection",camera.projection);
+	shader.setMatrix4f("projection",camera.projection);
+
+	Model mechaSonic = Model("MODELS/Klonoa/Klonoa (Medium).gltf");
+
+	
+	glEnable(GL_DEPTH_TEST); 
 
 	while(!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.0f,0.0f,0.0f,1.0f); //Color de la ventana
-		glClear(GL_COLOR_BUFFER_BIT);// refrescar el buffer Colorear constantemente
+		glClearColor(1.0f,0.4f,0.5f,1.0f); //Color de la ventana
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// refrescar el buffer Colorear constantemente
 
 		debugMode(window);
 
-		shader->useProgram();
+		shader.useProgram();
 
 		//Update Camera
 		camera.spectatorMode(window);
 		camera.updateViewMatrix();
 
-		shader->setMatrix4f("view",camera.view);
+		shader.setMatrix4f("view",camera.view);
 
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES,sizeof(indices),GL_UNSIGNED_INT,0);
-
+		//glBindVertexArray(VAO);
+		//glDrawElements(GL_TRIANGLES,sizeof(indices),GL_UNSIGNED_INT,0);
+		mechaSonic.Draw(shader);
 		glfwSwapBuffers(window);// Limpiar el buffer del frame anterior
 		glfwPollEvents();//llamar eventos que nosotros hayamos configurado
 	}

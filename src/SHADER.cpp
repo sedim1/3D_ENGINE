@@ -1,4 +1,4 @@
-#include<SHADER.h>
+#include"SHADER.h"
 //ShaderProgram methods
 ShaderProgram::ShaderProgram(vector<string>&sources,vector<GLenum>&types)
 {
@@ -59,10 +59,18 @@ string ShaderProgram::ToString()
 }
 
 //Uniform update methods
-void ShaderProgram::setMatrix4f(string uniform,glm::mat4 matrix){
+void ShaderProgram::setMatrix4f(const string &uniform,glm::mat4 matrix)
+{
 	useProgram();
 	int location = glGetUniformLocation(id,uniform.data());
-		glUniformMatrix4fv(location,1,GL_FALSE,glm::value_ptr(matrix));
+	glUniformMatrix4fv(location,1,GL_FALSE,glm::value_ptr(matrix));
+}
+
+void ShaderProgram::setInt(const string &uniform,int value)
+{
+	useProgram();
+	int location = glGetUniformLocation(id,uniform.data());
+	glUniform1i(location,value);
 }
 
 //Functions of compiling and linking shaders
