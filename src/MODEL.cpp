@@ -6,6 +6,27 @@ Model::Model(const std::string &path){
 	loadModel(path);
 }
 
+void Model::modelInfo(){
+	int vertexMemory=0;
+	int indexMemory=0;
+	float totalMemory=0.0f;
+	for(int i = 0; i < meshes.size(); i++)
+	{
+		cout<<"Mesh: "<<i+1<<endl;
+		cout<<"Textures Assinged:"<<endl;
+		for(int j = 0;j<meshes[i].textures.size();j++)
+		{
+			cout<<"Texture "<<i+1<<endl;
+			cout<<"Type: "<<meshes[i].textures[j].type<<" ";
+			cout<<"Path: "<<meshes[i].textures[j].path<<endl;
+		}
+		vertexMemory += meshes[i].vertices.size();
+		indexMemory += meshes[i].indices.size();
+	}
+	totalMemory = (((vertexMemory)*sizeof(Vertex)/sizeof(Vertex)) + ((indexMemory)*sizeof(unsigned int)/sizeof(unsigned int))) * 0.000006;
+	cout<<"Size: "<<totalMemory<<"MB"<<endl;
+}
+
 void Model::Draw(ShaderProgram &shader){
 	for(unsigned int i = 0;i<meshes.size();i++)
 		meshes[i].Draw(shader);
@@ -71,9 +92,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene){
 	if(mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-		vector<Texture> diffuseMaps = loadMaterialTextures(material,aiTextureType_DIFFUSE,"texture_diffuse");//No special properties
+		vector<Texture> diffuseMaps = loadMaterialTextures(material,aiTextureType_DIFFUSE,"texture_diffuse");//Regular base texture
 		textures.insert(textures.end(),diffuseMaps.begin(),diffuseMaps.end());
-		vector<Texture> specularMaps = loadMaterialTextures(material,aiTextureType_SPECULAR,"specular_diffuse");//Special propertie
+		vector<Texture> specularMaps = loadMaterialTextures(material,aiTextureType_SPECULAR,"specular_diffuse");//
 		textures.insert(textures.end(),specularMaps.begin(),specularMaps.end());
 		vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
         	textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
@@ -83,7 +104,6 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene){
 	else{
 		cout<<"No Materials are on file"<<endl;
 	}
-	
 	return Mesh(vertexData,indices,textures);
 }
 
@@ -102,7 +122,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat,aiTextureType type,s
 			{
 				textures.push_back(texturesLoaded[j]);
 				skip=true;
-				cout<<texturesLoaded[j].path<<" has been loaded"<<endl;
+				//cout<<texturesLoaded[j].path<<" has been loaded"<<endl;
 				break;
 			}
 		}
@@ -133,7 +153,7 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
     	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     	if (data)
     	{
-		std::cout<<"Texture found!! nrComponents:"<<nrComponents<<std::endl;
+		//std::cout<<"Texture found!! nrComponents:"<<nrComponents<<std::endl;
         	GLenum format;
         	if (nrComponents == 1)
         	    format = GL_RED;

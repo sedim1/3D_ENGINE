@@ -15,8 +15,8 @@
 
 using namespace std;
 //Especificar el ancho y altura de la ventana
-const unsigned int width = 600;
-const unsigned int height = 400;
+const unsigned int width = 800;
+const unsigned int height = 600;
 
 void InitGLFWVersion();
 bool GladLoad();
@@ -95,19 +95,21 @@ bool GladLoad()
 void UpdateWindow(GLFWwindow* window,ShaderProgram& shader)
 {
 	Camera camera;
-	camera.position.z = 8.0f;
+	camera.position.z = 40.0f;
+	camera.position.y = 40.0f;
 	camera.yaw = -90.0f;
 	camera.updatePerspectiveProjection(width,height,0.1f,100.0f);
 	shader.setMatrix4f("projection",camera.projection);
 
-	Model mechaSonic = Model("MODELS/Klonoa/Klonoa (Medium).gltf");
+	Model mechaSonic = Model("MODELS/Krystal/Krystal.fbx");
+	mechaSonic.modelInfo();
 
 	
 	glEnable(GL_DEPTH_TEST); 
 
 	while(!glfwWindowShouldClose(window))
 	{
-		glClearColor(1.0f,0.4f,0.5f,1.0f); //Color de la ventana
+		glClearColor(0.4f,0.4f,0.4f,1.0f); //Color de la ventana
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// refrescar el buffer Colorear constantemente
 
 		debugMode(window);
