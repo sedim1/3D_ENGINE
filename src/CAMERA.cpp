@@ -65,24 +65,10 @@ void Camera::spectatorMode(GLFWwindow* window)
 	}
 	if(glfwGetKey(window,GLFW_KEY_A) == GLFW_PRESS)//MOVE LEFT
 	{
-		//Operation doin here
-		//cameraPos -= normalized(cross(cameraFront,cameraUp)) * cameraSpeed;
-		/*vec3 res, aux;
-		glm_vec3_crossn(cam->cameraFront,cam->cameraUp,aux);
-		glm_vec3_scale(aux,cameraSpeed,aux);
-		glm_vec3_sub(cam->cameraPos,aux,res);
-		glm_vec3_copy(res,cam->cameraPos);*/
 		position -= normalize(cross(front,up)) * cameraSpeed;
 	}
 	if(glfwGetKey(window,GLFW_KEY_D) == GLFW_PRESS)//MOVE RIGHT
 	{
-		//Operation doin here
-		//cameraPos += normalized(cross(cameraFront,cameraUp)) * cameraFront;
-		/*vec3 res, aux;
-		glm_vec3_crossn(cam->cameraFront,cam->cameraUp,aux);
-		glm_vec3_scale(aux,cameraSpeed,aux);
-		glm_vec3_add(cam->cameraPos,aux,res);
-		glm_vec3_copy(res,cam->cameraPos);*/
 		position += normalize(cross(front,up)) * cameraSpeed;
 	}
 }

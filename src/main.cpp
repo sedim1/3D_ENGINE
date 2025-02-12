@@ -101,7 +101,7 @@ void UpdateWindow(GLFWwindow* window,ShaderProgram& shader)
 	camera.updatePerspectiveProjection(width,height,0.1f,100.0f);
 	shader.setMatrix4f("projection",camera.projection);
 
-	Model mechaSonic = Model("MODELS/Krystal/Krystal.fbx");
+	Model mechaSonic = Model("MODELS/KLONOA1/Klonoa (Dtp)/Klonoa 1.obj");
 	mechaSonic.modelInfo();
 
 	
