@@ -25,6 +25,8 @@ class Model
 		Model(const std::string &path);
 		void Draw(ShaderProgram &shader);
 		void modelInfo();
+		auto& GetBoneInfoMap(){return m_BoneInfoMap;}
+		auto& GetBoneCount() {return m_BoneCounter;}
 	private:
 		//Model Data
 		vector<Mesh> meshes;
@@ -37,12 +39,6 @@ class Model
 		//BoneData Stuff
 		std::map<string,BoneInfo> m_BoneInfoMap;
 		int m_BoneCounter = 0;
-		auto& GetBoneInfoMap(){
-			return m_BoneInfoMap;
-		}
-		auto& GetBone() {
-			return m_BoneCounter;
-		}
 		void SetVertexDataToDefault(Vertex& vertex);
 		void SetVertexBoneData(Vertex& vertex,int boneID,float weight);
 		void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices,aiMesh* mesh,const aiScene* scene);

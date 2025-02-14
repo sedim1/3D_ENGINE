@@ -5,6 +5,7 @@
 #include"SHADER.h"
 #include"CAMERA.h"
 #include"MODEL.h"
+#include"ANIMATION.h"
 #include <vector>
 
 //Pasos para crear ventana
